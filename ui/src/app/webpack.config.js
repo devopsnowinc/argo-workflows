@@ -38,7 +38,7 @@ const config = {
           /node_modules\/monaco-editor/,
         ],
         test: /\.js$/,
-        loaders: [...(isProd ? ['babel-loader'] : ['source-map-loader'])],
+        loaders: ['babel-loader'],
       }, {
         test: /\.scss$/,
         loader: "style-loader!raw-loader!sass-loader"
