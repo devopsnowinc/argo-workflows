@@ -1,10 +1,10 @@
 import * as classNames from 'classnames';
 import * as moment from 'moment';
 import * as React from 'react';
-import { fromEvent, interval, Subscription } from 'rxjs';
+import {fromEvent, interval, Subscription} from 'rxjs';
 
 import * as models from '../../../../models';
-import { Utils } from '../../../shared/utils';
+import {Utils} from '../../../shared/utils';
 
 require('./workflow-timeline.scss');
 
@@ -30,7 +30,7 @@ export class WorkflowTimeline extends React.Component<WorkflowTimelineProps, Wor
 
     constructor(props: WorkflowTimelineProps) {
         super(props);
-        this.state = { parentWidth: 0, now: moment() };
+        this.state = {parentWidth: 0, now: moment()};
         this.ensureRunningWorkflowRefreshing(props.workflow);
     }
 
@@ -101,22 +101,22 @@ export class WorkflowTimeline extends React.Component<WorkflowTimelineProps, Wor
             }
         }
         return (
-            <div className='workflow-timeline' ref={container => (this.container = container)} style={{ width: Math.max(this.state.parentWidth, MIN_WIDTH) + NODE_NAME_WIDTH }}>
-                <div style={{ left: NODE_NAME_WIDTH }} className='workflow-timeline__start-line' />
+            <div className='workflow-timeline' ref={container => (this.container = container)} style={{width: Math.max(this.state.parentWidth, MIN_WIDTH) + NODE_NAME_WIDTH}}>
+                <div style={{left: NODE_NAME_WIDTH}} className='workflow-timeline__start-line' />
                 <div className='workflow-timeline__row workflow-timeline__row--header' />
                 {groups.map(group => [
-                    <div style={{ left: timeToLeft(group.startedAt) }} key={`group-${group.startedAt}`} className={classNames('workflow-timeline__start-line')}>
+                    <div style={{left: timeToLeft(group.startedAt)}} key={`group-${group.startedAt}`} className={classNames('workflow-timeline__start-line')}>
                         <span className='workflow-timeline__start-line__time'>{moment(group.startedAt).format('hh:mm')}</span>
                     </div>,
                     ...group.nodes.map(node => (
                         <div
                             key={node.id}
-                            className={classNames('workflow-timeline__row', { 'workflow-timeline__row--selected': node.id === this.props.selectedNodeId })}
+                            className={classNames('workflow-timeline__row', {'workflow-timeline__row--selected': node.id === this.props.selectedNodeId})}
                             onClick={() => this.props.nodeClicked && this.props.nodeClicked(node)}>
                             <div className='workflow-timeline__node-name'>
                                 <span title={Utils.shortNodeName(node)}>{Utils.shortNodeName(node)}</span>
                             </div>
-                            <div style={{ left: node.left, width: node.width }} className={`workflow-timeline__node workflow-timeline__node--${node.phase.toLocaleLowerCase()}`} />
+                            <div style={{left: node.left, width: node.width}} className={`workflow-timeline__node workflow-timeline__node--${node.phase.toLocaleLowerCase()}`} />
                         </div>
                     ))
                 ])}
@@ -126,7 +126,7 @@ export class WorkflowTimeline extends React.Component<WorkflowTimelineProps, Wor
 
     public updateWidth() {
         if (this.container) {
-            this.setState({ parentWidth: (this.container.offsetParent || window.document.body).clientWidth - NODE_NAME_WIDTH });
+            this.setState({parentWidth: (this.container.offsetParent || window.document.body).clientWidth - NODE_NAME_WIDTH});
         }
     }
 
@@ -135,7 +135,7 @@ export class WorkflowTimeline extends React.Component<WorkflowTimelineProps, Wor
         const isCompleted = workflow && workflow.status && completedPhases.indexOf(workflow.status.phase) > -1;
         if (!this.refreshSubscription && !isCompleted) {
             this.refreshSubscription = interval(1000).subscribe(() => {
-                this.setState({ now: moment() });
+                this.setState({now: moment()});
             });
         } else if (this.refreshSubscription && isCompleted) {
             this.refreshSubscription.unsubscribe();

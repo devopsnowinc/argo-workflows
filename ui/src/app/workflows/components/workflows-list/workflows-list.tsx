@@ -1,31 +1,31 @@
-import { Page, SlidingPanel } from 'argo-ui';
+import {Page, SlidingPanel} from 'argo-ui';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import {RouteComponentProps} from 'react-router-dom';
 import * as models from '../../../../models';
-import { labels, NODE_PHASE, Workflow, WorkflowPhase, WorkflowPhases } from '../../../../models';
-import { uiUrl } from '../../../shared/base';
+import {labels, NODE_PHASE, Workflow, WorkflowPhase, WorkflowPhases} from '../../../../models';
+import {uiUrl} from '../../../shared/base';
 
-import { BasePage } from '../../../shared/components/base-page';
+import {BasePage} from '../../../shared/components/base-page';
 
-import { CostOptimisationNudge } from '../../../shared/components/cost-optimisation-nudge';
-import { ErrorNotice } from '../../../shared/components/error-notice';
-import { ExampleManifests } from '../../../shared/components/example-manifests';
-import { FirstTimeUserPanel } from '../../../shared/components/first-time-user-panel';
-import { Loading } from '../../../shared/components/loading';
-import { PaginationPanel } from '../../../shared/components/pagination-panel';
-import { ZeroState } from '../../../shared/components/zero-state';
-import { Consumer } from '../../../shared/context';
-import { ListWatch, sortByYouth } from '../../../shared/list-watch';
-import { Pagination, parseLimit } from '../../../shared/pagination';
-import { ScopedLocalStorage } from '../../../shared/scoped-local-storage';
-import { services } from '../../../shared/services';
-import { Utils } from '../../../shared/utils';
+import {CostOptimisationNudge} from '../../../shared/components/cost-optimisation-nudge';
+import {ErrorNotice} from '../../../shared/components/error-notice';
+import {ExampleManifests} from '../../../shared/components/example-manifests';
+import {FirstTimeUserPanel} from '../../../shared/components/first-time-user-panel';
+import {Loading} from '../../../shared/components/loading';
+import {PaginationPanel} from '../../../shared/components/pagination-panel';
+import {ZeroState} from '../../../shared/components/zero-state';
+import {Consumer} from '../../../shared/context';
+import {ListWatch, sortByYouth} from '../../../shared/list-watch';
+import {Pagination, parseLimit} from '../../../shared/pagination';
+import {ScopedLocalStorage} from '../../../shared/scoped-local-storage';
+import {services} from '../../../shared/services';
+import {Utils} from '../../../shared/utils';
 import * as Actions from '../../../shared/workflow-operations-map';
-import { WorkflowCreator } from '../workflow-creator';
-import { WorkflowFilters } from '../workflow-filters/workflow-filters';
-import { WorkflowsRow } from '../workflows-row/workflows-row';
-import { WorkflowsSummaryContainer } from '../workflows-summary-container/workflows-summary-container';
-import { WorkflowsToolbar } from '../workflows-toolbar/workflows-toolbar';
+import {WorkflowCreator} from '../workflow-creator';
+import {WorkflowFilters} from '../workflow-filters/workflow-filters';
+import {WorkflowsRow} from '../workflows-row/workflows-row';
+import {WorkflowsSummaryContainer} from '../workflows-summary-container/workflows-summary-container';
+import {WorkflowsToolbar} from '../workflows-toolbar/workflows-toolbar';
 
 require('./workflows-list.scss');
 
@@ -122,7 +122,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
             minStartedAt: this.lastMonth(),
             maxStartedAt: this.nextDay(),
             selectedWorkflows: new Map<string, models.Workflow>(),
-            batchActionDisabled: { ...allBatchActionsEnabled },
+            batchActionDisabled: {...allBatchActionsEnabled},
             links: [],
             columns: []
         };
@@ -131,9 +131,9 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
     public componentDidMount(): void {
         services.info.getInfo().then(info => {
             const links = (info.links || []).filter(link => link.scope === 'workflow-list');
-            this.setState({ links, columns: info.columns });
+            this.setState({links, columns: info.columns});
         });
-        this.setState({ selectedWorkflows: new Map<string, models.Workflow>() }, () => {
+        this.setState({selectedWorkflows: new Map<string, models.Workflow>()}, () => {
             this.fetchWorkflows(
                 this.state.namespace,
                 this.state.selectedPhases,
@@ -147,7 +147,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
     }
 
     public componentWillUnmount(): void {
-        this.setState({ selectedWorkflows: new Map<string, models.Workflow>() });
+        this.setState({selectedWorkflows: new Map<string, models.Workflow>()});
         if (this.listWatch) {
             this.listWatch.stop();
         }
@@ -161,15 +161,15 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                         title='Workflows'
                         toolbar={{
                             breadcrumbs: [
-                                { title: 'Workflows', path: uiUrl('workflows') },
-                                { title: this.state.namespace, path: uiUrl('workflows/' + this.state.namespace) }
+                                {title: 'Workflows', path: uiUrl('workflows')},
+                                {title: this.state.namespace, path: uiUrl('workflows/' + this.state.namespace)}
                             ],
                             actionMenu: {
                                 items: [
                                     {
                                         title: 'Submit New Workflow',
                                         iconClassName: 'fa fa-plus',
-                                        action: () => ctx.navigation.goto('.', { sidePanel: 'submit-new-workflow' })
+                                        action: () => ctx.navigation.goto('.', {sidePanel: 'submit-new-workflow'})
                                     },
                                     ...this.state.links.map(link => ({
                                         title: link.name,
@@ -185,13 +185,13 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                                 'This page shows a list of your workflows. You can filter by namespace, label and now date and time. ' +
                                 'By default, only the last months workflows are shown.'
                             }
-                            style={{ margin: 20 }}>
+                            style={{margin: 20}}>
                             <>
                                 <WorkflowsToolbar
                                     selectedWorkflows={this.state.selectedWorkflows}
-                                    clearSelection={() => this.setState({ selectedWorkflows: new Map<string, models.Workflow>() })}
+                                    clearSelection={() => this.setState({selectedWorkflows: new Map<string, models.Workflow>()})}
                                     loadWorkflows={() => {
-                                        this.setState({ selectedWorkflows: new Map<string, models.Workflow>() });
+                                        this.setState({selectedWorkflows: new Map<string, models.Workflow>()});
                                         this.changeFilters(
                                             this.state.namespace,
                                             this.state.selectedPhases,
@@ -218,14 +218,14 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                                                 minStartedAt={this.state.minStartedAt}
                                                 maxStartedAt={this.state.maxStartedAt}
                                                 onChange={(namespace, selectedPhases, selectedLabels, minStartedAt, maxStartedAt) =>
-                                                    this.changeFilters(namespace, selectedPhases, selectedLabels, minStartedAt, maxStartedAt, { limit: this.state.pagination.limit })
+                                                    this.changeFilters(namespace, selectedPhases, selectedLabels, minStartedAt, maxStartedAt, {limit: this.state.pagination.limit})
                                                 }
                                             />
                                         </div>
                                     </div>
                                     <div className='columns small-12 xlarge-10'>{this.renderWorkflows()}</div>
                                 </div>
-                                <SlidingPanel isShown={!!this.sidePanel} onClose={() => ctx.navigation.goto('.', { sidePanel: null })}>
+                                <SlidingPanel isShown={!!this.sidePanel} onClose={() => ctx.navigation.goto('.', {sidePanel: null})}>
                                     {this.sidePanel === 'submit-new-workflow' && (
                                         <WorkflowCreator
                                             namespace={Utils.getNamespaceWithDefault(this.state.namespace)}
@@ -277,13 +277,13 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                     x.items = x.items && x.items.filter(w => this.nullSafeTimeFilter(minStartedAt, maxStartedAt, w.status.startedAt, w.status.phase === NODE_PHASE.PENDING));
                     return x;
                 }),
-            (resourceVersion: string) => services.workflows.watchFields({ namespace, phases: selectedPhases, labels: selectedLabels, resourceVersion }),
+            (resourceVersion: string) => services.workflows.watchFields({namespace, phases: selectedPhases, labels: selectedLabels, resourceVersion}),
             metadata =>
                 this.setState(
                     {
                         error: null,
                         namespace,
-                        pagination: { offset: pagination.offset, limit: pagination.limit, nextOffset: metadata.continue },
+                        pagination: {offset: pagination.offset, limit: pagination.limit, nextOffset: metadata.continue},
                         selectedPhases,
                         selectedLabels,
                         minStartedAt,
@@ -292,9 +292,9 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                     },
                     this.saveHistory
                 ),
-            () => this.setState({ error: null }),
-            workflows => this.setState({ workflows: workflows.slice(0, this.state.pagination.limit || 999999) }),
-            error => this.setState({ error }),
+            () => this.setState({error: null}),
+            workflows => this.setState({workflows: workflows.slice(0, this.state.pagination.limit || 999999)}),
+            error => this.setState({error}),
             sortByYouth
         );
         this.listWatch.start();
@@ -312,7 +312,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
     }
 
     private countsByCompleted() {
-        const counts = { complete: 0, incomplete: 0 };
+        const counts = {complete: 0, incomplete: 0};
         (this.state.workflows || []).forEach(wf => {
             if (wf.metadata?.labels && wf.metadata?.labels[labels.completed] === 'true') {
                 counts.complete++;
@@ -401,7 +401,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                                             let newTags: string[] = [];
                                             if (this.state.selectedLabels.indexOf(value) === -1) {
                                                 newTags = this.state.selectedLabels.concat(value);
-                                                this.setState({ selectedLabels: newTags });
+                                                this.setState({selectedLabels: newTags});
                                             }
                                             this.changeFilters(
                                                 this.state.namespace,
@@ -451,12 +451,12 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
 
     private updateCurrentlySelectedAndBatchActions(newSelectedWorkflows: Map<string, Workflow>): void {
         const actions: any = Actions.WorkflowOperationsMap;
-        const nowDisabled: any = { ...allBatchActionsEnabled };
+        const nowDisabled: any = {...allBatchActionsEnabled};
         for (const action of Object.keys(nowDisabled)) {
             for (const wf of Array.from(newSelectedWorkflows.values())) {
                 nowDisabled[action] = nowDisabled[action] || actions[action].disabled(wf);
             }
         }
-        this.setState({ batchActionDisabled: nowDisabled, selectedWorkflows: new Map<string, models.Workflow>(newSelectedWorkflows) });
+        this.setState({batchActionDisabled: nowDisabled, selectedWorkflows: new Map<string, models.Workflow>(newSelectedWorkflows)});
     }
 }

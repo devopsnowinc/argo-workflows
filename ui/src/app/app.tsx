@@ -1,9 +1,9 @@
-import { NavigationManager, NotificationsManager, PopupManager } from 'argo-ui';
+import {NavigationManager, NotificationsManager, PopupManager} from 'argo-ui';
 
-import { createBrowserHistory } from 'history';
+import {createBrowserHistory} from 'history';
 import * as React from 'react';
-import { AppRouter } from './app-router';
-import { ContextApis, Provider } from './shared/context';
+import {AppRouter} from './app-router';
+import {ContextApis, Provider} from './shared/context';
 
 const history = createBrowserHistory();
 

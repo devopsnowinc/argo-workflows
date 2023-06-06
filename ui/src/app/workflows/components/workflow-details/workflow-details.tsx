@@ -1,48 +1,48 @@
-import { Page, SlidingPanel } from 'argo-ui';
+import {Page, SlidingPanel} from 'argo-ui';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { ArtifactRepository, execSpec, Link, NodeStatus, Parameter, Workflow } from '../../../../models';
-import { ANNOTATION_KEY_POD_NAME_VERSION } from '../../../shared/annotations';
-import { artifactRepoHasLocation, findArtifact } from '../../../shared/artifacts';
-import { uiUrl } from '../../../shared/base';
-import { CostOptimisationNudge } from '../../../shared/components/cost-optimisation-nudge';
-import { ErrorNotice } from '../../../shared/components/error-notice';
-import { ProcessURL } from '../../../shared/components/links';
-import { Loading } from '../../../shared/components/loading';
-import { SecurityNudge } from '../../../shared/components/security-nudge';
-import { hasArtifactGCError, hasWarningConditionBadge } from '../../../shared/conditions-panel';
-import { Context } from '../../../shared/context';
-import { historyUrl } from '../../../shared/history';
-import { getPodName, getTemplateNameFromNode } from '../../../shared/pod-name';
-import { RetryWatch } from '../../../shared/retry-watch';
-import { services } from '../../../shared/services';
-import { getResolvedTemplates } from '../../../shared/template-resolution';
-import { useQueryParams } from '../../../shared/use-query-params';
-import { useResizableWidth } from '../../../shared/use-resizable-width';
-import { useTransition } from '../../../shared/use-transition';
+import {useContext, useEffect, useRef, useState} from 'react';
+import {RouteComponentProps} from 'react-router';
+import {ArtifactRepository, execSpec, Link, NodeStatus, Parameter, Workflow} from '../../../../models';
+import {ANNOTATION_KEY_POD_NAME_VERSION} from '../../../shared/annotations';
+import {artifactRepoHasLocation, findArtifact} from '../../../shared/artifacts';
+import {uiUrl} from '../../../shared/base';
+import {CostOptimisationNudge} from '../../../shared/components/cost-optimisation-nudge';
+import {ErrorNotice} from '../../../shared/components/error-notice';
+import {ProcessURL} from '../../../shared/components/links';
+import {Loading} from '../../../shared/components/loading';
+import {SecurityNudge} from '../../../shared/components/security-nudge';
+import {hasArtifactGCError, hasWarningConditionBadge} from '../../../shared/conditions-panel';
+import {Context} from '../../../shared/context';
+import {historyUrl} from '../../../shared/history';
+import {getPodName, getTemplateNameFromNode} from '../../../shared/pod-name';
+import {RetryWatch} from '../../../shared/retry-watch';
+import {services} from '../../../shared/services';
+import {getResolvedTemplates} from '../../../shared/template-resolution';
+import {useQueryParams} from '../../../shared/use-query-params';
+import {useResizableWidth} from '../../../shared/use-resizable-width';
+import {useTransition} from '../../../shared/use-transition';
 import * as Operations from '../../../shared/workflow-operations-map';
-import { WorkflowOperations } from '../../../shared/workflow-operations-map';
-import { WidgetGallery } from '../../../widgets/widget-gallery';
-import { EventsPanel } from '../events-panel';
-import { WorkflowArtifacts } from '../workflow-artifacts';
-import { WorkflowLogsViewer } from '../workflow-logs-viewer/workflow-logs-viewer';
-import { WorkflowNodeInfo } from '../workflow-node-info/workflow-node-info';
-import { WorkflowPanel } from '../workflow-panel/workflow-panel';
-import { WorkflowParametersPanel } from '../workflow-parameters-panel';
-import { WorkflowSummaryPanel } from '../workflow-summary-panel';
-import { WorkflowTimeline } from '../workflow-timeline/workflow-timeline';
-import { WorkflowYamlViewer } from '../workflow-yaml-viewer/workflow-yaml-viewer';
-import { ArtifactPanel } from './artifact-panel';
-import { SuspendInputs } from './suspend-inputs';
-import { WorkflowResourcePanel } from './workflow-resource-panel';
+import {WorkflowOperations} from '../../../shared/workflow-operations-map';
+import {WidgetGallery} from '../../../widgets/widget-gallery';
+import {EventsPanel} from '../events-panel';
+import {WorkflowArtifacts} from '../workflow-artifacts';
+import {WorkflowLogsViewer} from '../workflow-logs-viewer/workflow-logs-viewer';
+import {WorkflowNodeInfo} from '../workflow-node-info/workflow-node-info';
+import {WorkflowPanel} from '../workflow-panel/workflow-panel';
+import {WorkflowParametersPanel} from '../workflow-parameters-panel';
+import {WorkflowSummaryPanel} from '../workflow-summary-panel';
+import {WorkflowTimeline} from '../workflow-timeline/workflow-timeline';
+import {WorkflowYamlViewer} from '../workflow-yaml-viewer/workflow-yaml-viewer';
+import {ArtifactPanel} from './artifact-panel';
+import {SuspendInputs} from './suspend-inputs';
+import {WorkflowResourcePanel} from './workflow-resource-panel';
 
 require('./workflow-details.scss');
 
 function parseSidePanelParam(param: string) {
     const [type, nodeId, container] = (param || '').split(':');
-    return { type, nodeId, container: container || 'main' };
+    return {type, nodeId, container: container || 'main'};
 }
 
 const LEFT_NAV_WIDTH = 60;
@@ -51,9 +51,9 @@ const INITIAL_SIDE_PANEL_WIDTH = 570;
 const ANIMATION_MS = 200;
 const ANIMATION_BUFFER_MS = 20;
 
-export const WorkflowDetails = ({ history, location, match }: RouteComponentProps<any>) => {
+export const WorkflowDetails = ({history, location, match}: RouteComponentProps<any>) => {
     // boiler-plate
-    const { navigation, popup } = useContext(Context);
+    const {navigation, popup} = useContext(Context);
     const queryParams = new URLSearchParams(location.search);
 
     const [namespace] = useState(match.params.namespace);
@@ -72,7 +72,7 @@ export const WorkflowDetails = ({ history, location, match }: RouteComponentProp
     const [selectedTemplateArtifactRepo, setSelectedTemplateArtifactRepo] = useState<ArtifactRepository>();
     const isSidePanelExpanded = !!(selectedNode || selectedArtifact);
     const isSidePanelAnimating = useTransition(isSidePanelExpanded, ANIMATION_MS + ANIMATION_BUFFER_MS);
-    const { width: sidePanelWidth, dragHandleProps: sidePanelDragHandleProps } = useResizableWidth({
+    const {width: sidePanelWidth, dragHandleProps: sidePanelDragHandleProps} = useResizableWidth({
         disabled: isSidePanelAnimating || !isSidePanelExpanded,
         initialWidth: INITIAL_SIDE_PANEL_WIDTH,
         maxWidth: globalThis.innerWidth - LEFT_NAV_WIDTH - GRAPH_CONTAINER_MIN_WIDTH,
@@ -94,7 +94,7 @@ export const WorkflowDetails = ({ history, location, match }: RouteComponentProp
         const selectedWorkflowNode = workflow && workflow.status && workflow.status.nodes && workflow.status.nodes[selectedWorkflowNodeId];
         return (
             selectedWorkflowNode?.inputs?.parameters?.map(param => {
-                const paramClone = { ...param };
+                const paramClone = {...param};
                 if (paramClone.enum) {
                     paramClone.value = paramClone.default;
                 }
@@ -120,7 +120,7 @@ export const WorkflowDetails = ({ history, location, match }: RouteComponentProp
     }, [workflow, selectedArtifact]);
 
     useEffect(() => {
-        history.push(historyUrl('workflows/{namespace}/{name}', { namespace, name, tab, nodeId, nodePanelView, sidePanel }));
+        history.push(historyUrl('workflows/{namespace}/{name}', {namespace, name, tab, nodeId, nodePanelView, sidePanel}));
     }, [namespace, name, tab, nodeId, nodePanelView, sidePanel]);
 
     useEffect(() => {
@@ -289,7 +289,7 @@ export const WorkflowDetails = ({ history, location, match }: RouteComponentProp
 
     useEffect(() => {
         const retryWatch = new RetryWatch<Workflow>(
-            () => services.workflows.watch({ name, namespace }),
+            () => services.workflows.watch({name, namespace}),
             () => setError(null),
             e => {
                 if (e.type === 'DELETED') {
@@ -307,7 +307,7 @@ export const WorkflowDetails = ({ history, location, match }: RouteComponentProp
                     .then()
                     .catch(e => {
                         if (e.status === 404) {
-                            navigation.goto(historyUrl('archived-workflows', { namespace, name, deep: true }));
+                            navigation.goto(historyUrl('archived-workflows', {namespace, name, deep: true}));
                         }
                     });
 
@@ -355,7 +355,7 @@ export const WorkflowDetails = ({ history, location, match }: RouteComponentProp
     };
 
     const getParametersAsJsonString = () => {
-        const outputVariables: { [x: string]: string } = {};
+        const outputVariables: {[x: string]: string} = {};
         parameters.forEach(param => {
             outputVariables[param.name] = param.value;
         });
@@ -402,37 +402,37 @@ export const WorkflowDetails = ({ history, location, match }: RouteComponentProp
             title={'Workflow Details'}
             toolbar={{
                 breadcrumbs: [
-                    { title: 'Workflows', path: uiUrl('workflows') },
-                    { title: namespace, path: uiUrl('workflows/' + namespace) },
-                    { title: name, path: uiUrl('workflows/' + namespace + '/' + name) }
+                    {title: 'Workflows', path: uiUrl('workflows')},
+                    {title: namespace, path: uiUrl('workflows/' + namespace)},
+                    {title: name, path: uiUrl('workflows/' + namespace + '/' + name)}
                 ],
                 actionMenu: {
                     items: getItems()
                 },
                 tools: (
                     <div className='workflow-details__topbar-buttons'>
-                        <a className={classNames({ active: tab === 'summary' })} onClick={() => setTab('summary')}>
+                        <a className={classNames({active: tab === 'summary'})} onClick={() => setTab('summary')}>
                             <i className='fa fa-columns' />
                             {workflow && workflow.status.conditions && hasWarningConditionBadge(workflow.status.conditions) && <span className='badge' />}
                         </a>
-                        <a className={classNames({ active: tab === 'events' })} onClick={() => setTab('events')}>
+                        <a className={classNames({active: tab === 'events'})} onClick={() => setTab('events')}>
                             <i className='fa argo-icon-notification' />
                         </a>
-                        <a className={classNames({ active: tab === 'timeline' })} onClick={() => setTab('timeline')}>
+                        <a className={classNames({active: tab === 'timeline'})} onClick={() => setTab('timeline')}>
                             <i className='fa argo-icon-timeline' />
                         </a>
-                        <a className={classNames({ active: tab === 'workflow' })} onClick={() => setTab('workflow')}>
+                        <a className={classNames({active: tab === 'workflow'})} onClick={() => setTab('workflow')}>
                             <i className='fa argo-icon-workflow' />
                         </a>
                     </div>
                 )
             }}>
-            <div className={classNames('workflow-details', { 'workflow-details--step-node-expanded': isSidePanelExpanded })}>
+            <div className={classNames('workflow-details', {'workflow-details--step-node-expanded': isSidePanelExpanded})}>
                 <ErrorNotice error={error} />
                 {(tab === 'summary' && renderSummaryTab()) ||
                     (workflow && (
                         <div className='workflow-details__graph-container-wrapper'>
-                            <div className='workflow-details__graph-container' style={{ minWidth: GRAPH_CONTAINER_MIN_WIDTH }}>
+                            <div className='workflow-details__graph-container' style={{minWidth: GRAPH_CONTAINER_MIN_WIDTH}}>
                                 {(tab === 'workflow' && (
                                     <WorkflowPanel workflowMetadata={workflow.metadata} workflowStatus={workflow.status} selectedNodeId={nodeId} nodeClicked={setNodeId} />
                                 )) ||

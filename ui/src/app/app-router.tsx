@@ -1,10 +1,10 @@
-import { Layout, Notifications, NotificationsManager, NotificationType, Popup, PopupManager, PopupProps } from 'argo-ui';
+import {Layout, Notifications, NotificationsManager, NotificationType, Popup, PopupManager, PopupProps} from 'argo-ui';
 import * as H from 'history';
 
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Redirect, Route, Router, Switch } from 'react-router';
-import { Version } from '../models';
+import {useEffect, useState} from 'react';
+import {Redirect, Route, Router, Switch} from 'react-router';
+import {Version} from '../models';
 import apidocs from './apidocs';
 import archivedWorkflows from './archived-workflows';
 import clusterWorkflowTemplates from './cluster-workflow-templates';
@@ -13,21 +13,20 @@ import eventflow from './event-flow';
 import eventSources from './event-sources';
 import help from './help';
 import login from './login';
-import { ModalSwitch } from './modals/modal-switch';
+import {ModalSwitch} from './modals/modal-switch';
 import plugins from './plugins';
 import reports from './reports';
 import sensors from './sensors';
-import { uiUrl } from './shared/base';
-import { ChatButton } from './shared/components/chat-button';
+import {uiUrl} from './shared/base';
+import {ChatButton} from './shared/components/chat-button';
 import ErrorBoundary from './shared/components/error-boundary';
-import { services } from './shared/services';
-import { Utils } from './shared/utils';
+import {services} from './shared/services';
+import {Utils} from './shared/utils';
 import userinfo from './userinfo';
-import { Widgets } from './widgets/widgets';
+import {Widgets} from './widgets/widgets';
 import workflowEventBindings from './workflow-event-bindings';
 import workflowTemplates from './workflow-templates';
 import workflows from './workflows';
-import policy from './policy';
 
 const eventFlowUrl = uiUrl('event-flow');
 const sensorUrl = uiUrl('sensors');
@@ -46,9 +45,9 @@ const loginUrl = uiUrl('login');
 const timelineUrl = uiUrl('timeline');
 const reportsUrl = uiUrl('reports');
 
-export const AppRouter = ({ popupManager, history, notificationsManager }: { popupManager: PopupManager; history: H.History; notificationsManager: NotificationsManager }) => {
+export const AppRouter = ({popupManager, history, notificationsManager}: {popupManager: PopupManager; history: H.History; notificationsManager: NotificationsManager}) => {
     const [popupProps, setPopupProps] = useState<PopupProps>();
-    const [modals, setModals] = useState<{ string: boolean }>();
+    const [modals, setModals] = useState<{string: boolean}>();
     const [version, setVersion] = useState<Version>();
     const [namespace, setNamespace] = useState<string>();
     const [navBarBackgroundColor, setNavBarBackgroundColor] = useState<string>();
@@ -89,7 +88,7 @@ export const AppRouter = ({ popupManager, history, notificationsManager }: { pop
                 <Switch>
                     <Route path={uiUrl('widgets')} component={Widgets} />
                     <Layout
-                        navBarStyle={{ backgroundColor: '#052e4c' }}
+                        navBarStyle={{backgroundColor: navBarBackgroundColor}}
                         navItems={[
                             {
                                 title: 'Workflows',
@@ -169,7 +168,6 @@ export const AppRouter = ({ popupManager, history, notificationsManager }: { pop
                                 <Route exact={true} strict={true} path={timelineUrl}>
                                     <Redirect to={workflowsUrl} />
                                 </Route>
-                                <Route exact={true} strict={true} path='/policy' component={policy.component} />
                                 <Route path={eventFlowUrl} component={eventflow.component} />
                                 <Route path={sensorUrl} component={sensors.component} />
                                 <Route path={eventSourceUrl} component={eventSources.component} />

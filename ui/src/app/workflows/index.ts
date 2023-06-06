@@ -1,4 +1,4 @@
-import { WorkflowsContainer } from './components/workflows-container';
+import {WorkflowsContainer} from './components/workflows-container';
 
 export default {
     component: WorkflowsContainer

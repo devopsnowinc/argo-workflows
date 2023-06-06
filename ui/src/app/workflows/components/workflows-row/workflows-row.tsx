@@ -1,15 +1,15 @@
-import { Ticker } from 'argo-ui/src/index';
+import {Ticker} from 'argo-ui/src/index';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import * as models from '../../../../models';
-import { Workflow } from '../../../../models';
-import { ANNOTATION_DESCRIPTION, ANNOTATION_TITLE } from '../../../shared/annotations';
-import { uiUrl } from '../../../shared/base';
-import { DurationPanel } from '../../../shared/components/duration-panel';
-import { PhaseIcon } from '../../../shared/components/phase-icon';
-import { Timestamp } from '../../../shared/components/timestamp';
-import { wfDuration } from '../../../shared/duration';
-import { WorkflowDrawer } from '../workflow-drawer/workflow-drawer';
+import {Workflow} from '../../../../models';
+import {ANNOTATION_DESCRIPTION, ANNOTATION_TITLE} from '../../../shared/annotations';
+import {uiUrl} from '../../../shared/base';
+import {DurationPanel} from '../../../shared/components/duration-panel';
+import {PhaseIcon} from '../../../shared/components/phase-icon';
+import {Timestamp} from '../../../shared/components/timestamp';
+import {wfDuration} from '../../../shared/duration';
+import {WorkflowDrawer} from '../workflow-drawer/workflow-drawer';
 
 interface WorkflowsRowProps {
     workflow: Workflow;
@@ -72,7 +72,7 @@ export class WorkflowsRow extends React.Component<WorkflowsRowProps, WorkflowRow
                                 <div
                                     onClick={e => {
                                         e.preventDefault();
-                                        this.setState({ hideDrawer: !this.state.hideDrawer });
+                                        this.setState({hideDrawer: !this.state.hideDrawer});
                                     }}
                                     className={`workflows-row__action workflows-row__action--${this.state.hideDrawer ? 'show' : 'hide'}`}>
                                     {this.state.hideDrawer ? (
