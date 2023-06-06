@@ -82,7 +82,6 @@ class IoArgoprojWorkflowV1alpha1Mutex(ModelNormal):
         """
         return {
             'name': (str,),  # noqa: E501
-            'namespace': (str,),  # noqa: E501
         }
 
     @cached_property
@@ -92,7 +91,6 @@ class IoArgoprojWorkflowV1alpha1Mutex(ModelNormal):
 
     attribute_map = {
         'name': 'name',  # noqa: E501
-        'namespace': 'namespace',  # noqa: E501
     }
 
     read_only_vars = {
@@ -137,7 +135,6 @@ class IoArgoprojWorkflowV1alpha1Mutex(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             name (str): name of the mutex. [optional]  # noqa: E501
-            namespace (str): Namespace is the namespace of the mutex, default: [namespace of workflow]. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
@@ -220,7 +217,6 @@ class IoArgoprojWorkflowV1alpha1Mutex(ModelNormal):
                                 through its discriminator because we passed in
                                 _visited_composed_classes = (Animal,)
             name (str): name of the mutex. [optional]  # noqa: E501
-            namespace (str): Namespace is the namespace of the mutex, default: [namespace of workflow]. [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)

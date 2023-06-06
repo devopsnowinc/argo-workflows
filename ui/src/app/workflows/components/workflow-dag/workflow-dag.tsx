@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-import {ArtifactRepositoryRefStatus, NODE_PHASE, NodeStatus} from '../../../../models';
-import {nodeArtifacts} from '../../../shared/artifacts';
-import {GraphPanel} from '../../../shared/components/graph/graph-panel';
-import {Graph} from '../../../shared/components/graph/types';
-import {Utils} from '../../../shared/utils';
-import {genres} from './genres';
-import {getCollapsedNodeName, getMessage, getNodeParent, isCollapsedNode} from './graph/collapsible-node';
-import {icons} from './icons';
-import {WorkflowDagRenderOptionsPanel} from './workflow-dag-render-options-panel';
+import { ArtifactRepositoryRefStatus, NODE_PHASE, NodeStatus } from '../../../../models';
+import { nodeArtifacts } from '../../../shared/artifacts';
+import { GraphPanel } from '../../../shared/components/graph/graph-panel';
+import { Graph } from '../../../shared/components/graph/types';
+import { Utils } from '../../../shared/utils';
+import { genres } from './genres';
+import { getCollapsedNodeName, getMessage, getNodeParent, isCollapsedNode } from './graph/collapsible-node';
+import { icons } from './icons';
+import { WorkflowDagRenderOptionsPanel } from './workflow-dag-render-options-panel';
 
 export interface WorkflowDagRenderOptions {
     expandNodes: Set<string>;
@@ -18,7 +18,7 @@ export interface WorkflowDagRenderOptions {
 interface WorkflowDagProps {
     workflowName: string;
     artifactRepositoryRef?: ArtifactRepositoryRefStatus;
-    nodes: {[nodeId: string]: NodeStatus};
+    nodes: { [nodeId: string]: NodeStatus };
     selectedNodeId?: string;
     nodeSize?: number;
     hideOptions?: boolean;
@@ -49,7 +49,7 @@ function nodeLabel(n: NodeStatus) {
 }
 
 const classNames = (() => {
-    const v: {[label: string]: boolean} = {
+    const v: { [label: string]: boolean } = {
         Artifact: true,
         Suspended: true,
         Collapsed: true
@@ -76,7 +76,7 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
     public render() {
         this.prepareGraph();
 
-        const tags: {[key: string]: boolean} = {};
+        const tags: { [key: string]: boolean } = {};
         Object.values(this.props.nodes || {}).forEach(n => (tags[getNodeLabelTemplateName(n)] = true));
 
         return (
@@ -190,7 +190,7 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
                             icon: icons.Collapsed,
                             classNames: 'Collapsed'
                         });
-                        edges.set({v: item.parent, w: item.nodeName}, {});
+                        edges.set({ v: item.parent, w: item.nodeName }, {});
                         previousCollapsed = item.nodeName;
                     }
                     continue;
@@ -202,7 +202,7 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
                 const isExpanded: boolean = this.state.expandNodes.has('*') || this.state.expandNodes.has(item.nodeName);
 
                 nodes.set(item.nodeName, nodeLabel(child));
-                edges.set({v: item.parent, w: item.nodeName}, {});
+                edges.set({ v: item.parent, w: item.nodeName }, {});
 
                 // If we have already considered the children of this node, don't consider them again
                 if (consideredChildren.has(item.nodeName)) {
@@ -234,7 +234,7 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
                 const exitHandler = allNodes[onExitHandlerNodeId.id];
                 nodes.set(onExitHandlerNodeId.id, nodeLabel(exitHandler));
                 if (nodes.has(v)) {
-                    edges.set({v, w: onExitHandlerNodeId.id}, {});
+                    edges.set({ v, w: onExitHandlerNodeId.id }, {});
                 }
             });
             const onExitRoot: PrepareNode = {
@@ -251,9 +251,9 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
                 .filter(node => nodes.has(node.id))
                 .forEach(node => {
                     nodeArtifacts(node, this.artifactRepository)
-                        .filter(({name}) => !name.endsWith('-logs'))
+                        .filter(({ name }) => !name.endsWith('-logs'))
                         // only show files or directories
-                        .filter(({filename, key}) => filename.includes('.') || key.endsWith('/'))
+                        .filter(({ filename, key }) => filename.includes('.') || key.endsWith('/'))
                         .forEach(a => {
                             nodes.set(a.urn, {
                                 genre: 'Artifact',
@@ -263,7 +263,7 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
                             });
                             const input = a.artifactNameDiscriminator === 'input';
                             edges.set(
-                                {v: input ? a.urn : node.id, w: input ? node.id : a.urn},
+                                { v: input ? a.urn : node.id, w: input ? node.id : a.urn },
                                 {
                                     label: a.name,
                                     classNames: 'related'
@@ -286,7 +286,7 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
         if (isCollapsedNode(getNodeParent(nodeId))) {
             this.expandNode(getNodeParent(nodeId));
         } else {
-            this.setState({expandNodes: new Set(this.state.expandNodes).add(getNodeParent(nodeId))});
+            this.setState({ expandNodes: new Set(this.state.expandNodes).add(getNodeParent(nodeId)) });
         }
     }
 

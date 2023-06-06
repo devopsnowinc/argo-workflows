@@ -2338,7 +2338,6 @@ Mutex holds Mutex configuration
 | Field Name | Field Type | Description   |
 |:----------:|:----------:|---------------|
 |`name`|`string`|name of the mutex|
-|`namespace`|`string`|Namespace is the namespace of the mutex, default: [namespace of workflow]|
 
 ## SemaphoreRef
 
@@ -2348,7 +2347,6 @@ SemaphoreRef is a reference of Semaphore
 | Field Name | Field Type | Description   |
 |:----------:|:----------:|---------------|
 |`configMapKeyRef`|[`ConfigMapKeySelector`](#configmapkeyselector)|ConfigMapKeyRef is configmap selector for Semaphore configuration|
-|`namespace`|`string`|Namespace is the namespace of the configmap, default: [namespace of workflow]|
 
 ## ArtifactLocation
 

@@ -1,42 +1,42 @@
-import {Page, SlidingPanel, Tabs} from 'argo-ui';
-import {useContext, useEffect, useState} from 'react';
+import { Page, SlidingPanel, Tabs } from 'argo-ui';
+import { useContext, useEffect, useState } from 'react';
 import React = require('react');
-import {RouteComponentProps} from 'react-router-dom';
-import {Observable} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
-import {kubernetes, Workflow} from '../../../../models';
-import {EventSource} from '../../../../models/event-source';
-import {Sensor} from '../../../../models/sensor';
-import {uiUrl} from '../../../shared/base';
-import {Button} from '../../../shared/components/button';
-import {ErrorNotice} from '../../../shared/components/error-notice';
-import {InfoIcon} from '../../../shared/components/fa-icons';
-import {GraphPanel} from '../../../shared/components/graph/graph-panel';
-import {Node} from '../../../shared/components/graph/types';
-import {Links} from '../../../shared/components/links';
-import {NamespaceFilter} from '../../../shared/components/namespace-filter';
-import {ResourceEditor} from '../../../shared/components/resource-editor/resource-editor';
-import {useCollectEvent} from '../../../shared/components/use-collect-event';
-import {ZeroState} from '../../../shared/components/zero-state';
-import {Context} from '../../../shared/context';
-import {Footnote} from '../../../shared/footnote';
-import {historyUrl} from '../../../shared/history';
-import {ListWatch} from '../../../shared/list-watch';
-import {RetryObservable} from '../../../shared/retry-observable';
-import {services} from '../../../shared/services';
-import {useQueryParams} from '../../../shared/use-query-params';
-import {Utils} from '../../../shared/utils';
-import {EventsPanel} from '../../../workflows/components/events-panel';
-import {FullHeightLogsViewer} from '../../../workflows/components/workflow-logs-viewer/full-height-logs-viewer';
-import {buildGraph} from './build-graph';
-import {genres} from './genres';
-import {ID} from './id';
+import { RouteComponentProps } from 'react-router-dom';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { kubernetes, Workflow } from '../../../../models';
+import { EventSource } from '../../../../models/event-source';
+import { Sensor } from '../../../../models/sensor';
+import { uiUrl } from '../../../shared/base';
+import { Button } from '../../../shared/components/button';
+import { ErrorNotice } from '../../../shared/components/error-notice';
+import { InfoIcon } from '../../../shared/components/fa-icons';
+import { GraphPanel } from '../../../shared/components/graph/graph-panel';
+import { Node } from '../../../shared/components/graph/types';
+import { Links } from '../../../shared/components/links';
+import { NamespaceFilter } from '../../../shared/components/namespace-filter';
+import { ResourceEditor } from '../../../shared/components/resource-editor/resource-editor';
+import { useCollectEvent } from '../../../shared/components/use-collect-event';
+import { ZeroState } from '../../../shared/components/zero-state';
+import { Context } from '../../../shared/context';
+import { Footnote } from '../../../shared/footnote';
+import { historyUrl } from '../../../shared/history';
+import { ListWatch } from '../../../shared/list-watch';
+import { RetryObservable } from '../../../shared/retry-observable';
+import { services } from '../../../shared/services';
+import { useQueryParams } from '../../../shared/use-query-params';
+import { Utils } from '../../../shared/utils';
+import { EventsPanel } from '../../../workflows/components/events-panel';
+import { FullHeightLogsViewer } from '../../../workflows/components/workflow-logs-viewer/full-height-logs-viewer';
+import { buildGraph } from './build-graph';
+import { genres } from './genres';
+import { ID } from './id';
 
 require('./event-flow-page.scss');
 
-export const EventFlowPage = ({history, location, match}: RouteComponentProps<any>) => {
+export const EventFlowPage = ({ history, location, match }: RouteComponentProps<any>) => {
     // boiler-plate
-    const {navigation} = useContext(Context);
+    const { navigation } = useContext(Context);
     const queryParams = new URLSearchParams(location.search);
 
     // state for URL and query parameters
@@ -78,7 +78,7 @@ export const EventFlowPage = ({history, location, match}: RouteComponentProps<an
     const [eventSources, setEventSources] = useState<EventSource[]>();
     const [sensors, setSensors] = useState<Sensor[]>();
     const [workflows, setWorkflows] = useState<Workflow[]>();
-    const [flow, setFlow] = useState<{[id: string]: {count: number; timeout?: any}}>({}); // event flowing?
+    const [flow, setFlow] = useState<{ [id: string]: { count: number; timeout?: any } }>({}); // event flowing?
 
     // when namespace changes, we must reload
     useEffect(() => {
@@ -146,7 +146,7 @@ export const EventFlowPage = ({history, location, match}: RouteComponentProps<an
         setError(null);
         setFlow(newFlow => {
             if (!newFlow[id]) {
-                newFlow[id] = {count: 0};
+                newFlow[id] = { count: 0 };
             }
             clearTimeout(newFlow[id].timeout);
             newFlow[id].count++;
@@ -204,9 +204,9 @@ export const EventFlowPage = ({history, location, match}: RouteComponentProps<an
         }
         const x = ID.split(selectedNode);
         const kind = x.type === 'EventSource' ? 'EventSource' : 'Sensor';
-        const resources: {metadata: kubernetes.ObjectMeta}[] = (kind === 'EventSource' ? eventSources : sensors) || [];
-        const value = resources.find((y: {metadata: kubernetes.ObjectMeta}) => y.metadata.namespace === x.namespace && y.metadata.name === x.name);
-        return {kind, value, ...x};
+        const resources: { metadata: kubernetes.ObjectMeta }[] = (kind === 'EventSource' ? eventSources : sensors) || [];
+        const value = resources.find((y: { metadata: kubernetes.ObjectMeta }) => y.metadata.namespace === x.namespace && y.metadata.name === x.name);
+        return { kind, value, ...x };
     })();
 
     const emptyGraph = graph.nodes.size === 0;
@@ -215,8 +215,8 @@ export const EventFlowPage = ({history, location, match}: RouteComponentProps<an
             title='Event Flow'
             toolbar={{
                 breadcrumbs: [
-                    {title: 'Event Flow', path: uiUrl('event-flow')},
-                    {title: namespace, path: uiUrl('event-flow/' + namespace)}
+                    { title: 'Event Flow', path: uiUrl('event-flow') },
+                    { title: namespace, path: uiUrl('event-flow/' + namespace) }
                 ],
                 actionMenu: {
                     items: [
@@ -269,8 +269,8 @@ export const EventFlowPage = ({history, location, match}: RouteComponentProps<an
                         nodeGenresTitle={'Type'}
                         nodeGenres={genres}
                         nodeClassNamesTitle={'Status'}
-                        nodeClassNames={{'': true, 'Pending': true, 'Ready': true, 'Running': true, 'Failed': true, 'Succeeded': true, 'Error': true}}
-                        iconShapes={{workflow: 'circle', collapsed: 'circle', conditions: 'circle'}}
+                        nodeClassNames={{ '': true, 'Pending': true, 'Ready': true, 'Running': true, 'Failed': true, 'Succeeded': true, 'Error': true }}
+                        iconShapes={{ workflow: 'circle', collapsed: 'circle', conditions: 'circle' }}
                         horizontal={true}
                         selectedNode={selectedNode}
                         onNodeSelect={x => {
@@ -328,14 +328,14 @@ export const EventFlowPage = ({history, location, match}: RouteComponentProps<an
                                                         ((selected.kind === 'Sensor'
                                                             ? services.sensor.sensorsLogs(namespace, selected.name, selected.key, '', 50)
                                                             : services.eventSource.eventSourcesLogs(namespace, selected.name, '', selected.key, '', 50)) as Observable<any>).pipe(
-                                                            filter(e => !!e),
-                                                            map(
-                                                                e =>
-                                                                    Object.entries(e)
-                                                                        .map(([key, value]) => key + '=' + value)
-                                                                        .join(', ') + '\n'
-                                                            )
-                                                        ),
+                                                                filter(e => !!e),
+                                                                map(
+                                                                    e =>
+                                                                        Object.entries(e)
+                                                                            .map(([key, value]) => key + '=' + value)
+                                                                            .join(', ') + '\n'
+                                                                )
+                                                            ),
                                                     shouldRepeat: () => false
                                                 }}
                                             />

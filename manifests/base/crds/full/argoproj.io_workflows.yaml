@@ -1856,8 +1856,6 @@ spec:
                     properties:
                       name:
                         type: string
-                      namespace:
-                        type: string
                     type: object
                   semaphore:
                     properties:
@@ -1872,8 +1870,6 @@ spec:
                         required:
                         - key
                         type: object
-                      namespace:
-                        type: string
                     type: object
                 type: object
               templateDefaults:
@@ -9251,8 +9247,6 @@ spec:
                         properties:
                           name:
                             type: string
-                          namespace:
-                            type: string
                         type: object
                       semaphore:
                         properties:
@@ -9267,8 +9261,6 @@ spec:
                             required:
                             - key
                             type: object
-                          namespace:
-                            type: string
                         type: object
                     type: object
                   timeout:
@@ -17346,8 +17338,6 @@ spec:
                           properties:
                             name:
                               type: string
-                            namespace:
-                              type: string
                           type: object
                         semaphore:
                           properties:
@@ -17362,8 +17352,6 @@ spec:
                               required:
                               - key
                               type: object
-                            namespace:
-                              type: string
                           type: object
                       type: object
                     timeout:
@@ -29028,8 +29016,6 @@ spec:
                           properties:
                             name:
                               type: string
-                            namespace:
-                              type: string
                           type: object
                         semaphore:
                           properties:
@@ -29044,8 +29030,6 @@ spec:
                               required:
                               - key
                               type: object
-                            namespace:
-                              type: string
                           type: object
                       type: object
                     timeout:
@@ -31565,8 +31549,6 @@ spec:
                         properties:
                           name:
                             type: string
-                          namespace:
-                            type: string
                         type: object
                       semaphore:
                         properties:
@@ -31581,8 +31563,6 @@ spec:
                             required:
                             - key
                             type: object
-                          namespace:
-                            type: string
                         type: object
                     type: object
                   templateDefaults:
@@ -38960,8 +38940,6 @@ spec:
                             properties:
                               name:
                                 type: string
-                              namespace:
-                                type: string
                             type: object
                           semaphore:
                             properties:
@@ -38976,8 +38954,6 @@ spec:
                                 required:
                                 - key
                                 type: object
-                              namespace:
-                                type: string
                             type: object
                         type: object
                       timeout:
@@ -47055,8 +47031,6 @@ spec:
                               properties:
                                 name:
                                   type: string
-                                namespace:
-                                  type: string
                               type: object
                             semaphore:
                               properties:
@@ -47071,8 +47045,6 @@ spec:
                                   required:
                                   - key
                                   type: object
-                                namespace:
-                                  type: string
                               type: object
                           type: object
                         timeout:

@@ -1,8 +1,5 @@
-export SHELL:=bash
+export SHELL:=/bin/bash
 export SHELLOPTS:=$(if $(SHELLOPTS),$(SHELLOPTS):)pipefail:errexit
-
-# NOTE: Please ensure dependencies are synced with the flake.nix file in nix-files/flake.nix before upgrading 
-# any external dependency. There is documentation on how to do this under the Developer Guide
 
 # https://stackoverflow.com/questions/4122831/disable-make-builtin-rules-and-variables-from-inside-the-make-file
 MAKEFLAGS += --no-builtin-rules
@@ -164,8 +161,7 @@ ui/dist/app/index.html: $(shell find ui/src -type f && find ui -maxdepth 1 -type
 	JOBS=max yarn --cwd ui build
 
 $(GOPATH)/bin/staticfiles:
-	go install bou.ke/staticfiles@dd04075 # update this in Nix when upgrading it here
- 
+	go install bou.ke/staticfiles@dd04075
 
 ifeq ($(STATIC_FILES),true)
 server/static/files.go: $(GOPATH)/bin/staticfiles ui/dist/app/index.html
@@ -285,36 +281,27 @@ swagger: \
 
 
 $(GOPATH)/bin/mockery:
-	go install github.com/vektra/mockery/v2@v2.26.0 # update this in Nix when upgrading it here
+	go install github.com/vektra/mockery/v2@v2.26.0
 $(GOPATH)/bin/controller-gen:
-	go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1 # update this in Nix when upgrading it here
-
+	go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1
 $(GOPATH)/bin/go-to-protobuf:
-	go install k8s.io/code-generator/cmd/go-to-protobuf@v0.21.5 # update this in Nix when upgrading it here
-
+	go install k8s.io/code-generator/cmd/go-to-protobuf@v0.21.5
 $(GOPATH)/src/github.com/gogo/protobuf:
 	[ -e $(GOPATH)/src/github.com/gogo/protobuf ] || git clone --depth 1 https://github.com/gogo/protobuf.git -b v1.3.2 $(GOPATH)/src/github.com/gogo/protobuf
 $(GOPATH)/bin/protoc-gen-gogo:
-	go install github.com/gogo/protobuf/protoc-gen-gogo@v1.3.2 # update this in Nix when upgrading it here
-
+	go install github.com/gogo/protobuf/protoc-gen-gogo@v1.3.2
 $(GOPATH)/bin/protoc-gen-gogofast:
-	go install github.com/gogo/protobuf/protoc-gen-gogofast@v1.3.2 # update this in Nix when upgrading it here
-
+	go install github.com/gogo/protobuf/protoc-gen-gogofast@v1.3.2
 $(GOPATH)/bin/protoc-gen-grpc-gateway:
-	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway@v1.16.0 # update this in Nix when upgrading it here
-
+	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway@v1.16.0
 $(GOPATH)/bin/protoc-gen-swagger:
-	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@v1.16.0 # update this in Nix when upgrading it here
-
+	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@v1.16.0
 $(GOPATH)/bin/openapi-gen:
-	go install k8s.io/kube-openapi/cmd/openapi-gen@v0.0.0-20220124234850-424119656bbf # update this in Nix when upgrading it here
-
+	go install k8s.io/kube-openapi/cmd/openapi-gen@v0.0.0-20220124234850-424119656bbf
 $(GOPATH)/bin/swagger:
-	go install github.com/go-swagger/go-swagger/cmd/swagger@v0.28.0 # update this in Nix when upgrading it here
-
+	go install github.com/go-swagger/go-swagger/cmd/swagger@v0.28.0
 $(GOPATH)/bin/goimports:
-	go install golang.org/x/tools/cmd/goimports@v0.1.7 # update this in Nix when upgrading it here
-
+	go install golang.org/x/tools/cmd/goimports@v0.1.7
 
 /usr/local/bin/clang-format:
 ifeq (, $(shell which clang-format))
@@ -626,8 +613,7 @@ docs/cli/argo.md: $(CLI_PKGS) go.sum server/static/files.go hack/cli/main.go
 # docs
 
 /usr/local/bin/mdspell:
-	npm i -g markdown-spellcheck # update this in Nix when upgrading it here
-
+	npm i -g markdown-spellcheck
 
 .PHONY: docs-spellcheck
 docs-spellcheck: /usr/local/bin/mdspell
@@ -635,8 +621,7 @@ docs-spellcheck: /usr/local/bin/mdspell
 	mdspell --ignore-numbers --ignore-acronyms --en-us --no-suggestions --report $(shell find docs -name '*.md' -not -name upgrading.md -not -name fields.md -not -name upgrading.md -not -name swagger.md -not -name executor_swagger.md -not -path '*/cli/*')
 
 /usr/local/bin/markdown-link-check:
-	npm i -g markdown-link-check # update this in Nix when upgrading it here
-
+	npm i -g markdown-link-check
 
 .PHONY: docs-linkcheck
 docs-linkcheck: /usr/local/bin/markdown-link-check
@@ -644,8 +629,7 @@ docs-linkcheck: /usr/local/bin/markdown-link-check
 	markdown-link-check -q -c .mlc_config.json $(shell find docs -name '*.md' -not -name fields.md -not -name swagger.md -not -name executor_swagger.md)
 
 /usr/local/bin/markdownlint:
-	npm i -g  markdownlint-cli # update this in Nix when upgrading it here
-
+	npm i -g  markdownlint-cli
 
 .PHONY: docs-lint
 docs-lint: /usr/local/bin/markdownlint
@@ -653,8 +637,7 @@ docs-lint: /usr/local/bin/markdownlint
 	markdownlint docs --fix --ignore docs/fields.md --ignore docs/executor_swagger.md --ignore docs/swagger.md --ignore docs/cli --ignore docs/walk-through/the-structure-of-workflow-specs.md
 
 /usr/local/bin/mkdocs:
-	python -m pip install mkdocs==1.2.4 mkdocs_material==8.1.9  mkdocs-spellcheck==0.2.1 # update this in Nix when upgrading it here
-
+	python -m pip install mkdocs==1.2.4 mkdocs_material==8.1.9  mkdocs-spellcheck==0.2.1
 
 .PHONY: docs
 docs: /usr/local/bin/mkdocs \
@@ -671,7 +654,7 @@ docs: /usr/local/bin/mkdocs \
 	# fix the fields.md document
 	go run -tags fields ./hack parseexamples
 	# tell the user the fastest way to edit docs
-	@echo "ℹ️ If you want to preview your docs, open site/index.html. If you want to edit them with hot-reload, run 'make docs-serve' to start mkdocs on port 8000"
+	@echo "ℹ️ If you want to preview you docs, open site/index.html. If you want to edit them with hot-reload, run 'make docs-serve' to start mkdocs on port 8000"
 
 .PHONY: docs-serve
 docs-serve: docs

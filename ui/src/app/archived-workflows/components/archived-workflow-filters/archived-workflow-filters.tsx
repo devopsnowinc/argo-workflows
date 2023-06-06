@@ -1,11 +1,11 @@
 import * as React from 'react';
 import DatePicker from 'react-datepicker';
 import * as models from '../../../../models';
-import {CheckboxFilter} from '../../../shared/components/checkbox-filter/checkbox-filter';
-import {InputFilter} from '../../../shared/components/input-filter';
-import {NamespaceFilter} from '../../../shared/components/namespace-filter';
-import {TagsInput} from '../../../shared/components/tags-input/tags-input';
-import {services} from '../../../shared/services';
+import { CheckboxFilter } from '../../../shared/components/checkbox-filter/checkbox-filter';
+import { InputFilter } from '../../../shared/components/input-filter';
+import { NamespaceFilter } from '../../../shared/components/namespace-filter';
+import { TagsInput } from '../../../shared/components/tags-input/tags-input';
+import { services } from '../../../shared/services';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -184,9 +184,9 @@ export class ArchivedWorkflowFilters extends React.Component<ArchivedWorkflowFil
         const phasesMap = new Map<string, number>();
         this.props.phaseItems.forEach(value => phasesMap.set(value, 0));
         workflows.filter(wf => wf.status.phase).forEach(wf => phasesMap.set(wf.status.phase, (phasesMap.get(wf.status.phase) || 0) + 1));
-        const results = new Array<{name: string; count: number}>();
+        const results = new Array<{ name: string; count: number }>();
         phasesMap.forEach((val, key) => {
-            results.push({name: key, count: val});
+            results.push({ name: key, count: val });
         });
         return results;
     }

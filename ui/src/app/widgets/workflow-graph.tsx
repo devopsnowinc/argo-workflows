@@ -1,15 +1,15 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
-import {RouteComponentProps} from 'react-router';
-import {ArtifactRepositoryRefStatus, NodeStatus} from '../../models';
-import {uiUrl} from '../shared/base';
-import {ErrorNotice} from '../shared/components/error-notice';
-import {historyUrl} from '../shared/history';
-import {RetryWatch} from '../shared/retry-watch';
-import {services} from '../shared/services';
-import {WorkflowDag} from '../workflows/components/workflow-dag/workflow-dag';
+import { useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router';
+import { ArtifactRepositoryRefStatus, NodeStatus } from '../../models';
+import { uiUrl } from '../shared/base';
+import { ErrorNotice } from '../shared/components/error-notice';
+import { historyUrl } from '../shared/history';
+import { RetryWatch } from '../shared/retry-watch';
+import { services } from '../shared/services';
+import { WorkflowDag } from '../workflows/components/workflow-dag/workflow-dag';
 
-export const WorkflowGraph = ({history, match}: RouteComponentProps<any>) => {
+export const WorkflowGraph = ({ history, match }: RouteComponentProps<any>) => {
     const queryParams = new URLSearchParams(location.search);
     const namespace = match.params.namespace;
     const name = queryParams.get('name');
@@ -33,13 +33,13 @@ export const WorkflowGraph = ({history, match}: RouteComponentProps<any>) => {
 
     const [displayName, setDisplayName] = useState<string>();
     const [creationTimestamp, setCreationTimestamp] = useState<Date>(); // used to make sure we only display the most recent one
-    const [nodes, setNodes] = useState<{[nodeId: string]: NodeStatus}>();
+    const [nodes, setNodes] = useState<{ [nodeId: string]: NodeStatus }>();
     const [artifactRepositoryRef, setArtifactRepositoryRef] = useState<ArtifactRepositoryRefStatus>();
     const [error, setError] = useState<Error>();
 
     useEffect(() => {
         const w = new RetryWatch(
-            () => services.workflows.watch({namespace, name, labels: [label]}),
+            () => services.workflows.watch({ namespace, name, labels: [label] }),
             () => setError(null),
             e => {
                 const wf = e.object;

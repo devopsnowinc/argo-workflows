@@ -1,14 +1,14 @@
 import * as React from 'react';
-import {Workflow} from '../../../../models';
+import { Workflow } from '../../../../models';
 
-import {InlineTable} from '../../../shared/components/inline-table/inline-table';
-import {Loading} from '../../../shared/components/loading';
-import {ConditionsPanel} from '../../../shared/conditions-panel';
-import {formatDuration} from '../../../shared/duration';
-import {services} from '../../../shared/services';
-import {WorkflowCreatorInfo} from '../workflow-creator-info/workflow-creator-info';
-import {WorkflowFrom} from '../workflow-from';
-import {WorkflowLabels} from '../workflow-labels/workflow-labels';
+import { InlineTable } from '../../../shared/components/inline-table/inline-table';
+import { Loading } from '../../../shared/components/loading';
+import { ConditionsPanel } from '../../../shared/conditions-panel';
+import { formatDuration } from '../../../shared/duration';
+import { services } from '../../../shared/services';
+import { WorkflowCreatorInfo } from '../workflow-creator-info/workflow-creator-info';
+import { WorkflowFrom } from '../workflow-from';
+import { WorkflowLabels } from '../workflow-labels/workflow-labels';
 
 require('./workflow-drawer.scss');
 
@@ -30,7 +30,7 @@ export class WorkflowDrawer extends React.Component<WorkflowDrawerProps, Workflo
 
     public componentDidMount() {
         services.workflows.get(this.props.namespace, this.props.name).then(workflow => {
-            this.setState({workflow});
+            this.setState({ workflow });
         });
     }
 

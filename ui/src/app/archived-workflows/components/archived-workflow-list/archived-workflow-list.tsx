@@ -1,22 +1,22 @@
-import {Page} from 'argo-ui';
+import { Page } from 'argo-ui';
 import * as React from 'react';
-import {Link, RouteComponentProps} from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import * as models from '../../../../models';
-import {Workflow} from '../../../../models';
-import {uiUrl} from '../../../shared/base';
-import {BasePage} from '../../../shared/components/base-page';
-import {ErrorNotice} from '../../../shared/components/error-notice';
-import {Loading} from '../../../shared/components/loading';
-import {PaginationPanel} from '../../../shared/components/pagination-panel';
-import {PhaseIcon} from '../../../shared/components/phase-icon';
-import {Timestamp} from '../../../shared/components/timestamp';
-import {ZeroState} from '../../../shared/components/zero-state';
-import {formatDuration, wfDuration} from '../../../shared/duration';
-import {Pagination, parseLimit} from '../../../shared/pagination';
-import {ScopedLocalStorage} from '../../../shared/scoped-local-storage';
-import {services} from '../../../shared/services';
-import {Utils} from '../../../shared/utils';
-import {ArchivedWorkflowFilters} from '../archived-workflow-filters/archived-workflow-filters';
+import { Workflow } from '../../../../models';
+import { uiUrl } from '../../../shared/base';
+import { BasePage } from '../../../shared/components/base-page';
+import { ErrorNotice } from '../../../shared/components/error-notice';
+import { Loading } from '../../../shared/components/loading';
+import { PaginationPanel } from '../../../shared/components/pagination-panel';
+import { PhaseIcon } from '../../../shared/components/phase-icon';
+import { Timestamp } from '../../../shared/components/timestamp';
+import { ZeroState } from '../../../shared/components/zero-state';
+import { formatDuration, wfDuration } from '../../../shared/duration';
+import { Pagination, parseLimit } from '../../../shared/pagination';
+import { ScopedLocalStorage } from '../../../shared/scoped-local-storage';
+import { services } from '../../../shared/services';
+import { Utils } from '../../../shared/utils';
+import { ArchivedWorkflowFilters } from '../archived-workflow-filters/archived-workflow-filters';
 
 interface BrowserStorageOptions {
     pagination: Pagination;
@@ -44,14 +44,14 @@ export class ArchivedWorkflowList extends BasePage<RouteComponentProps<any>, Sta
         super(props, context);
         this.storage = new ScopedLocalStorage('ArchiveListOptions');
         const savedOptions = this.storage.getItem('options', {
-            pagination: {limit: defaultPaginationLimit},
+            pagination: { limit: defaultPaginationLimit },
             selectedPhases: [],
             selectedLabels: []
         } as State);
         const phaseQueryParam = this.queryParams('phase');
         const labelQueryParam = this.queryParams('label');
         this.state = {
-            pagination: {offset: this.queryParam('offset'), limit: parseLimit(this.queryParam('limit')) || savedOptions.pagination.limit},
+            pagination: { offset: this.queryParam('offset'), limit: parseLimit(this.queryParam('limit')) || savedOptions.pagination.limit },
             namespace: Utils.getNamespace(this.props.match.params.namespace) || '',
             name: this.queryParams('name').toString() || '',
             namePrefix: this.queryParams('namePrefix').toString() || '',
@@ -91,8 +91,8 @@ export class ArchivedWorkflowList extends BasePage<RouteComponentProps<any>, Sta
                 title='Archived Workflows'
                 toolbar={{
                     breadcrumbs: [
-                        {title: 'Archived Workflows', path: uiUrl('archived-workflows')},
-                        {title: this.state.namespace, path: uiUrl('archived-workflows/' + this.state.namespace)}
+                        { title: 'Archived Workflows', path: uiUrl('archived-workflows') },
+                        { title: this.state.namespace, path: uiUrl('archived-workflows/' + this.state.namespace) }
                     ]
                 }}>
                 <div className='row'>
@@ -239,7 +239,7 @@ export class ArchivedWorkflowList extends BasePage<RouteComponentProps<any>, Sta
                     this.saveHistory
                 );
             })
-            .catch(error => this.setState({error}));
+            .catch(error => this.setState({ error }));
     }
 
     private renderWorkflows() {

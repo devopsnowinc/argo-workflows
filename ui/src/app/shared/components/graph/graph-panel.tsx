@@ -1,20 +1,28 @@
 import * as React from 'react';
-import {useEffect} from 'react';
-import {TextInput} from '../../../shared/components/text-input';
-import {ScopedLocalStorage} from '../../scoped-local-storage';
-import {FilterDropDown} from '../filter-drop-down';
-import {Icon} from '../icon';
-import {GraphIcon} from './icon';
-import {formatLabel} from './label';
-import {layout} from './layout';
-import {Graph, Node} from './types';
+import { useEffect } from 'react';
+import { TextInput } from '../../../shared/components/text-input';
+import { ScopedLocalStorage } from '../../scoped-local-storage';
+import { FilterDropDown } from '../filter-drop-down';
+import { Icon } from '../icon';
+import { GraphIcon } from './icon';
+import { formatLabel } from './label';
+import { layout } from './layout';
+import { Graph, Node } from './types';
 
 require('./graph-panel.scss');
 
 type IconShape = 'rect' | 'circle';
 
-interface INodeSelectionMap {
+interface NodeGenres {
     [type: string]: boolean;
+}
+
+interface NodeClassNames {
+    [type: string]: boolean;
+}
+
+interface NodeTags {
+    [key: string]: boolean;
 }
 
 interface Props {
@@ -23,32 +31,31 @@ interface Props {
     options?: React.ReactNode; // add to the option panel
     classNames?: string;
     nodeGenresTitle: string;
-    nodeGenres: INodeSelectionMap;
+    nodeGenres: NodeGenres;
     nodeClassNamesTitle?: string;
-    nodeClassNames?: INodeSelectionMap;
+    nodeClassNames?: NodeClassNames;
     nodeTagsTitle?: string;
-    nodeTags?: INodeSelectionMap;
+    nodeTags?: NodeTags;
     nodeSize?: number; // default "64"
     horizontal?: boolean; // default "false"
     hideNodeTypes?: boolean; // default "false"
     hideOptions?: boolean; // default "false"
     defaultIconShape?: IconShape; // default "rect"
-    iconShapes?: {[type: string]: Icon};
+    iconShapes?: { [type: string]: Icon };
     selectedNode?: Node;
     onNodeSelect?: (id: Node) => void;
 }
 
-const merge = (a: {[key: string]: boolean}, b: {[key: string]: boolean}) => b && Object.assign(Object.assign({}, b), a);
+const merge = (a: { [key: string]: boolean }, b: { [key: string]: boolean }) => b && Object.assign(Object.assign({}, b), a);
 
 export const GraphPanel = (props: Props) => {
     const storage = new ScopedLocalStorage('graph/' + props.storageScope);
     const [nodeSize, setNodeSize] = React.useState<number>(storage.getItem('nodeSize', props.nodeSize));
     const [horizontal, setHorizontal] = React.useState<boolean>(storage.getItem('horizontal', !!props.horizontal));
     const [fast, setFast] = React.useState<boolean>(storage.getItem('fast', false));
-    const [nodeGenres, setNodeGenres] = React.useState<INodeSelectionMap>(storage.getItem('nodeGenres', props.nodeGenres));
-    const [nodeClassNames, setNodeClassNames] = React.useState<INodeSelectionMap>(storage.getItem('nodeClassNames', props.nodeClassNames));
-    const [nodeTags, setNodeTags] = React.useState<INodeSelectionMap>(props.nodeTags);
-    const [checkAll, setCheckAll] = React.useState<boolean>(true);
+    const [nodeGenres, setNodeGenres] = React.useState<NodeGenres>(storage.getItem('nodeGenres', props.nodeGenres));
+    const [nodeClassNames, setNodeClassNames] = React.useState<NodeClassNames>(storage.getItem('nodeClassNames', props.nodeClassNames));
+    const [nodeTags, setNodeTags] = React.useState<NodeTags>(props.nodeTags);
     const [nodeSearchKeyword, setNodeSearchKeyword] = React.useState<string>('');
 
     useEffect(() => storage.setItem('nodeSize', nodeSize, props.nodeSize), [nodeSize]);
@@ -62,11 +69,6 @@ export const GraphPanel = (props: Props) => {
     useEffect(() => setNodeGenres(merge(nodeGenres, props.nodeGenres)), [props.nodeGenres]);
     useEffect(() => setNodeClassNames(merge(nodeClassNames, props.nodeClassNames)), [props.nodeClassNames]);
     useEffect(() => setNodeTags(merge(nodeTags, props.nodeTags)), [props.nodeTags]);
-
-    useEffect(() => {
-        const allSelected = getIsAllSelected(nodeClassNames, nodeTags, nodeGenres);
-        setCheckAll(allSelected);
-    }, [nodeGenres, nodeClassNames, nodeTags]);
 
     const visible = (id: Node) => {
         const label = props.graph.nodes.get(id);
@@ -89,54 +91,6 @@ export const GraphPanel = (props: Props) => {
         return true;
     };
 
-    const checkBoxHandler = (callback: React.Dispatch<React.SetStateAction<INodeSelectionMap>>, label: string, checked: boolean) => {
-        callback(v => {
-            return {
-                ...v,
-                [label]: checked
-            };
-        });
-    };
-
-    const getNodeMapWithAllNodesSetToValue = (nodeSelectionMap: INodeSelectionMap, value: boolean) => {
-        return Object.keys(nodeSelectionMap).reduce((accumulatedMap, nextKey) => {
-            return {
-                ...accumulatedMap,
-                [nextKey]: value
-            };
-        }, {});
-    };
-
-    const getIsAllSelected = (classNames: INodeSelectionMap, tags: INodeSelectionMap, genres: INodeSelectionMap) => {
-        const nodeSelections: INodeSelectionMap = {...classNames, ...tags, ...genres};
-        const totalNodeCount = Object.keys(nodeSelections).length;
-
-        const selectedNodeCount = Object.keys(nodeSelections).reduce((accumulatedTotal, key) => {
-            if (nodeSelections[key]) {
-                return accumulatedTotal + 1;
-            } else {
-                return accumulatedTotal;
-            }
-        }, 0);
-
-        return selectedNodeCount === totalNodeCount;
-    };
-
-    const onSelectAll = (
-        classNames: INodeSelectionMap,
-        tags: INodeSelectionMap,
-        genres: INodeSelectionMap,
-        setClassNames: React.Dispatch<React.SetStateAction<INodeSelectionMap>>,
-        setTags: React.Dispatch<React.SetStateAction<INodeSelectionMap>>,
-        setGenres: React.Dispatch<React.SetStateAction<INodeSelectionMap>>
-    ) => {
-        const isAllSelected = getIsAllSelected(classNames, tags, genres);
-
-        setClassNames(getNodeMapWithAllNodesSetToValue(classNames, !isAllSelected));
-        setTags(getNodeMapWithAllNodesSetToValue(tags, !isAllSelected));
-        setGenres(getNodeMapWithAllNodesSetToValue(genres, !isAllSelected));
-    };
-
     layout(props.graph, nodeSize, horizontal, id => !visible(id), fast);
     const width = props.graph.width;
     const height = props.graph.height;
@@ -148,31 +102,33 @@ export const GraphPanel = (props: Props) => {
                     <FilterDropDown
                         sections={[
                             {
-                                title: '',
-                                values: {'Check All': checkAll},
-                                onChange: (_, checked) => {
-                                    onSelectAll(nodeClassNames, nodeTags, nodeGenres, setNodeClassNames, setNodeTags, setNodeGenres);
-                                }
-                            },
-                            {
                                 title: props.nodeGenresTitle,
                                 values: nodeGenres,
                                 onChange: (label, checked) => {
-                                    checkBoxHandler(setNodeGenres, label, checked);
+                                    setNodeGenres(v => {
+                                        v[label] = checked;
+                                        return Object.assign({}, v);
+                                    });
                                 }
                             },
                             {
                                 title: props.nodeClassNamesTitle,
                                 values: nodeClassNames,
                                 onChange: (label, checked) => {
-                                    checkBoxHandler(setNodeClassNames, label, checked);
+                                    setNodeClassNames(v => {
+                                        v[label] = checked;
+                                        return Object.assign({}, v);
+                                    });
                                 }
                             },
                             {
                                 title: props.nodeTagsTitle,
                                 values: nodeTags,
                                 onChange: (label, checked) => {
-                                    checkBoxHandler(setNodeTags, label, checked);
+                                    setNodeTags(v => {
+                                        v[label] = checked;
+                                        return Object.assign({}, v);
+                                    });
                                 }
                             }
                         ]}
@@ -195,19 +151,19 @@ export const GraphPanel = (props: Props) => {
                     </div>
                 </div>
             )}
-            <div className={'graph ' + props.classNames} style={{paddingTop: 35}}>
+            <div className={'graph ' + props.classNames} style={{ paddingTop: 65 }}>
                 {props.graph.nodes.size === 0 ? (
                     <p>Nothing to show</p>
                 ) : (
                     <svg key='graph' width={width + nodeSize * 2} height={height + nodeSize * 2}>
                         <defs>
-                            <marker id='arrow' viewBox='0 0 10 10' refX={10} refY={5} markerWidth={nodeSize / 8} markerHeight={nodeSize / 8} orient='auto-start-reverse'>
+                            <marker id='arrow' viewBox='0 0 10 10' refX={10} refY={5} markerWidth={nodeSize / 6} markerHeight={nodeSize / 6} orient='auto-start-reverse'>
                                 <path d='M 0 0 L 10 5 L 0 10 z' className='arrow' />
                             </marker>
                         </defs>
                         <g transform={`translate(${nodeSize},${nodeSize})`}>
                             {Array.from(props.graph.nodeGroups).map(([g, nodes]) => {
-                                const r: {x1: number; y1: number; x2: number; y2: number} = {
+                                const r: { x1: number; y1: number; x2: number; y2: number } = {
                                     x1: width,
                                     y1: height,
                                     x2: 0,
@@ -249,10 +205,11 @@ export const GraphPanel = (props: Props) => {
                                         <title>{n}</title>
                                         <g
                                             className={`node ${label.classNames || ''} ${props.selectedNode === n ? ' selected' : ''}`}
-                                            style={{strokeWidth: nodeSize / 15}}
+                                            style={{ strokeWidth: nodeSize / 15 }}
                                             onClick={() => props.onNodeSelect && props.onNodeSelect(n)}>
                                             {((props.iconShapes || {})[label.genre] || props.defaultIconShape) === 'circle' ? (
-                                                <circle r={nodeSize / 2} className='bg' />
+                                                // <circle r={nodeSize / 2} className='bg' />
+                                                <rect x={-nodeSize / 2} y={-nodeSize / 2} width={nodeSize} height={nodeSize} className='bg' rx={nodeSize / 4} />
                                             ) : (
                                                 <rect x={-nodeSize / 2} y={-nodeSize / 2} width={nodeSize} height={nodeSize} className='bg' rx={nodeSize / 4} />
                                             )}
