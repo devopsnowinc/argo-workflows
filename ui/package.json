@@ -15,7 +15,7 @@
         "node": ">=16"
     },
     "dependencies": {
-        "argo-ui": "https://github.com/argoproj/argo-ui.git#v2.5.0",
+        "argo-ui": "https://github.com/devopsnowinc/argo-ui",
         "chart.js": "^2.9.4",
         "chartjs-plugin-annotation": "^0.5.7",
         "classnames": "^2.3.2",
