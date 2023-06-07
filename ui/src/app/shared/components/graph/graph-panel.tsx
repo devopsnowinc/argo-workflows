@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { useEffect } from 'react';
-import { TextInput } from '../../../shared/components/text-input';
-import { ScopedLocalStorage } from '../../scoped-local-storage';
-import { FilterDropDown } from '../filter-drop-down';
-import { Icon } from '../icon';
-import { GraphIcon } from './icon';
-import { formatLabel } from './label';
-import { layout } from './layout';
-import { Graph, Node } from './types';
+import {useEffect} from 'react';
+import {TextInput} from '../../../shared/components/text-input';
+import {ScopedLocalStorage} from '../../scoped-local-storage';
+import {FilterDropDown} from '../filter-drop-down';
+import {Icon} from '../icon';
+import {GraphIcon} from './icon';
+import {formatLabel} from './label';
+import {layout} from './layout';
+import {Graph, Node} from './types';
 
 require('./graph-panel.scss');
 
@@ -41,12 +41,12 @@ interface Props {
     hideNodeTypes?: boolean; // default "false"
     hideOptions?: boolean; // default "false"
     defaultIconShape?: IconShape; // default "rect"
-    iconShapes?: { [type: string]: Icon };
+    iconShapes?: {[type: string]: Icon};
     selectedNode?: Node;
     onNodeSelect?: (id: Node) => void;
 }
 
-const merge = (a: { [key: string]: boolean }, b: { [key: string]: boolean }) => b && Object.assign(Object.assign({}, b), a);
+const merge = (a: {[key: string]: boolean}, b: {[key: string]: boolean}) => b && Object.assign(Object.assign({}, b), a);
 
 export const GraphPanel = (props: Props) => {
     const storage = new ScopedLocalStorage('graph/' + props.storageScope);
@@ -151,19 +151,19 @@ export const GraphPanel = (props: Props) => {
                     </div>
                 </div>
             )}
-            <div className={'graph ' + props.classNames} style={{ paddingTop: 35 }}>
+            <div className={'graph ' + props.classNames} style={{paddingTop: 35}}>
                 {props.graph.nodes.size === 0 ? (
                     <p>Nothing to show</p>
                 ) : (
                     <svg key='graph' width={width + nodeSize * 2} height={height + nodeSize * 2}>
                         <defs>
-                            <marker id='arrow' viewBox='0 0 10 10' refX={10} refY={5} markerWidth={nodeSize / 6} markerHeight={nodeSize / 6} orient='auto-start-reverse'>
+                            <marker id='arrow' viewBox='0 0 10 10' refX={10} refY={5} markerWidth={nodeSize / 8} markerHeight={nodeSize / 8} orient='auto-start-reverse'>
                                 <path d='M 0 0 L 10 5 L 0 10 z' className='arrow' />
                             </marker>
                         </defs>
                         <g transform={`translate(${nodeSize},${nodeSize})`}>
                             {Array.from(props.graph.nodeGroups).map(([g, nodes]) => {
-                                const r: { x1: number; y1: number; x2: number; y2: number } = {
+                                const r: {x1: number; y1: number; x2: number; y2: number} = {
                                     x1: width,
                                     y1: height,
                                     x2: 0,
@@ -205,11 +205,10 @@ export const GraphPanel = (props: Props) => {
                                         <title>{n}</title>
                                         <g
                                             className={`node ${label.classNames || ''} ${props.selectedNode === n ? ' selected' : ''}`}
-                                            style={{ strokeWidth: nodeSize / 15 }}
+                                            style={{strokeWidth: nodeSize / 15}}
                                             onClick={() => props.onNodeSelect && props.onNodeSelect(n)}>
                                             {((props.iconShapes || {})[label.genre] || props.defaultIconShape) === 'circle' ? (
-                                                // <circle r={nodeSize / 2} className='bg' />
-                                                <rect x={-nodeSize / 2} y={-nodeSize / 2} width={nodeSize} height={nodeSize} className='bg' rx={nodeSize / 4} />
+                                                <circle r={nodeSize / 2} className='bg' />
                                             ) : (
                                                 <rect x={-nodeSize / 2} y={-nodeSize / 2} width={nodeSize} height={nodeSize} className='bg' rx={nodeSize / 4} />
                                             )}

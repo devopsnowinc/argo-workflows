@@ -1,36 +1,36 @@
-import { Page, SlidingPanel } from 'argo-ui';
+import {Page, SlidingPanel} from 'argo-ui';
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { WorkflowTemplate } from '../../../../models';
-import { uiUrl } from '../../../shared/base';
-import { ErrorNotice } from '../../../shared/components/error-notice';
-import { ExampleManifests } from '../../../shared/components/example-manifests';
-import { InfoIcon } from '../../../shared/components/fa-icons';
-import { Loading } from '../../../shared/components/loading';
-import { PaginationPanel } from '../../../shared/components/pagination-panel';
-import { Timestamp } from '../../../shared/components/timestamp';
-import { useCollectEvent } from '../../../shared/components/use-collect-event';
-import { ZeroState } from '../../../shared/components/zero-state';
-import { Context } from '../../../shared/context';
-import { Footnote } from '../../../shared/footnote';
-import { historyUrl } from '../../../shared/history';
-import { Pagination, parseLimit } from '../../../shared/pagination';
-import { ScopedLocalStorage } from '../../../shared/scoped-local-storage';
-import { services } from '../../../shared/services';
-import { useQueryParams } from '../../../shared/use-query-params';
-import { Utils } from '../../../shared/utils';
-import { WorkflowTemplateCreator } from '../workflow-template-creator';
-import { WorkflowTemplateFilters } from '../workflow-template-filters/workflow-template-filters';
+import {useContext, useEffect, useState} from 'react';
+import {Link, RouteComponentProps} from 'react-router-dom';
+import {WorkflowTemplate} from '../../../../models';
+import {uiUrl} from '../../../shared/base';
+import {ErrorNotice} from '../../../shared/components/error-notice';
+import {ExampleManifests} from '../../../shared/components/example-manifests';
+import {InfoIcon} from '../../../shared/components/fa-icons';
+import {Loading} from '../../../shared/components/loading';
+import {PaginationPanel} from '../../../shared/components/pagination-panel';
+import {Timestamp} from '../../../shared/components/timestamp';
+import {useCollectEvent} from '../../../shared/components/use-collect-event';
+import {ZeroState} from '../../../shared/components/zero-state';
+import {Context} from '../../../shared/context';
+import {Footnote} from '../../../shared/footnote';
+import {historyUrl} from '../../../shared/history';
+import {Pagination, parseLimit} from '../../../shared/pagination';
+import {ScopedLocalStorage} from '../../../shared/scoped-local-storage';
+import {services} from '../../../shared/services';
+import {useQueryParams} from '../../../shared/use-query-params';
+import {Utils} from '../../../shared/utils';
+import {WorkflowTemplateCreator} from '../workflow-template-creator';
+import {WorkflowTemplateFilters} from '../workflow-template-filters/workflow-template-filters';
 
 require('./workflow-template-list.scss');
 
 const learnMore = <a href='https://argoproj.github.io/argo-workflows/workflow-templates/'>Learn more</a>;
 
-export const WorkflowTemplateList = ({ match, location, history }: RouteComponentProps<any>) => {
+export const WorkflowTemplateList = ({match, location, history}: RouteComponentProps<any>) => {
     // boiler-plate
     const queryParams = new URLSearchParams(location.search);
-    const { navigation } = useContext(Context);
+    const {navigation} = useContext(Context);
 
     const storage = new ScopedLocalStorage('WorkflowTemplateListOptions');
     const savedOptions = storage.getItem('paginationLimit', 0);
@@ -70,7 +70,7 @@ export const WorkflowTemplateList = ({ match, location, history }: RouteComponen
         services.workflowTemplate
             .list(namespace, labels, pagination)
             .then(list => {
-                setPagination({ ...pagination, nextOffset: list.metadata.continue });
+                setPagination({...pagination, nextOffset: list.metadata.continue});
                 setTemplates(list.items || []);
             })
             .then(() => setError(null))
@@ -87,8 +87,8 @@ export const WorkflowTemplateList = ({ match, location, history }: RouteComponen
             title='Workflow Templates'
             toolbar={{
                 breadcrumbs: [
-                    { title: 'Workflow Templates', path: uiUrl('workflow-templates') },
-                    { title: namespace, path: uiUrl('workflow-templates/' + namespace) }
+                    {title: 'Workflow Templates', path: uiUrl('workflow-templates')},
+                    {title: namespace, path: uiUrl('workflow-templates/' + namespace)}
                 ],
                 actionMenu: {
                     items: [
